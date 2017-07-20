@@ -5,7 +5,11 @@ class CreateProducts < ActiveRecord::Migration[5.0]
       t.integer :model_num
       t.decimal :price
 
+      t.belongs_to :manufacturer, foreign_key: true
+
+
       t.timestamps
+
     end
   end
 end
