@@ -12,6 +12,9 @@
 
 ActiveRecord::Schema.define(version: 20170720110323) do
 
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "clients", force: :cascade do |t|
     t.string   "first_name"
     t.string   "last_name"
@@ -33,8 +36,8 @@ ActiveRecord::Schema.define(version: 20170720110323) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer  "quantity"
-    t.index ["order_id"], name: "index_order_products_on_order_id"
-    t.index ["product_id"], name: "index_order_products_on_product_id"
+    t.index ["order_id"], name: "index_order_products_on_order_id", using: :btree
+    t.index ["product_id"], name: "index_order_products_on_product_id", using: :btree
   end
 
   create_table "orders", force: :cascade do |t|
@@ -43,7 +46,7 @@ ActiveRecord::Schema.define(version: 20170720110323) do
     t.integer  "client_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["client_id"], name: "index_orders_on_client_id"
+    t.index ["client_id"], name: "index_orders_on_client_id", using: :btree
   end
 
   create_table "products", force: :cascade do |t|
@@ -53,7 +56,7 @@ ActiveRecord::Schema.define(version: 20170720110323) do
     t.integer  "manufacturer_id"
     t.datetime "created_at",      null: false
     t.datetime "updated_at",      null: false
-    t.index ["manufacturer_id"], name: "index_products_on_manufacturer_id"
+    t.index ["manufacturer_id"], name: "index_products_on_manufacturer_id", using: :btree
   end
 
 end
