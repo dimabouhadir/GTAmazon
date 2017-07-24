@@ -55,18 +55,29 @@ OrderProduct.joins(:order).where("orders.date BETWEEN ? AND ?", Date.yesterday.b
 Product.joins(:orders).select("products.manufacturer_id").where("orders.date >= ?", Date.yesterday.beginning_of_day).where("orders.date < ?", Date.today.beginning_of_day)
 
 //FINAL
-client_ids = Order.joins(:products).select("orders.client_id").where("products.manufacturer_id = 7").where("orders.date >= ?", Date.yesterday.beginning_of_day).where("orders.date < ?", Date.today.beginning_of_day)
+client_ids = Order.joins(:products).select("orders.client_id").where("products.manufacturer_id = 65").where("orders.date >= ?", Date.yesterday.beginning_of_day).where("orders.date < ?", Date.today.beginning_of_day)
 Client.select("clients.first_name", "clients.last_name").where("clients.id IN (?)", client_ids)
 
 
 
-> I received a request from a survey company that wants to know the average age of people who bought the latest iPhone
+> I received a request from a survey company that wants to know the average age of people who bought the latest iPhone = model_num
 - get me all the average age of the clients that brought an iPhone
+
+clients_id = Order.select("orders.client_id").joins(:order_products).joins(:products).where("products.model_num = 666")
+Client.where("clients.id IN (?)", client_ids)
+years = clients.map(&:dob).map(&:year)
+Date.today.year.to_f - (years.sum / years.size.to_f)
+
 
 > I get commissions from manufacturers depending on sale
 - get me the total amount spent on products from manufacturer `x` in the last month (edited)
 
 
+quantity_price = OrderProduct.joins(:product).select("products.price", "order_products.quantity").where("products.manufacturer_id = 70")
+sum = 0
+quantity_price.each do |row|
+sum += row.quantity * row.price
+end
 
 
 # GTAmazon
