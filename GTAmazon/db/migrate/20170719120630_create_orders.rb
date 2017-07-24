@@ -4,7 +4,7 @@ class CreateOrders < ActiveRecord::Migration[5.0]
       t.datetime :date
       t.integer :order_num
 
-      t.belongs_to :client, foreign_key: true
+      t.belongs_to :client
 
       t.timestamps
 
