@@ -24,7 +24,7 @@ namespace :db do
     client_ids = Client.all.map(&:id)
     20.times do
       Order.create!(
-        date: Faker::Time.between(1.week.ago, Date.tomorrow, :all),
+        date: Faker::Time.between(1.month.ago, Date.tomorrow, :all),
         order_num: Faker::Number.between(1,5),
         client_id: client_ids.sample
       )
@@ -45,7 +45,8 @@ namespace :db do
       OrderProduct.create!(
         order_id: order_ids.sample,
         product_id: product_ids.sample,
-        quantity: Faker::Number.between(1,5)
+        quantity: Faker::Number.between(1,5),
+        unit_price: Faker::Number.between(1,100)
       )
     end
   end

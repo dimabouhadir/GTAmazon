@@ -5,6 +5,7 @@ I want to see my orders
 SELECT clients.first_name, clients.last_name, orders.id as order_id, orders.date  from clients join orders ON clients.id = orders.client_id where clients.id = 1;
 
 Order.joins(:client).where("clients.id = 1")
+Order.where("client_id = 1")
 
 
 @id = INSERT ID HERE
@@ -39,7 +40,7 @@ Manufacturer.joins(:products).where("products.id IN (?)",  OrderProduct.joins(:o
 > I want to filter the products by manufacturers
 - get me the products manufactured by manufacturer `x`
 
-Product.select("name").where("manufacturer_id = 5")
+Product.where(manufacturer_id: 5)
 
 > As an admin, I know products I received yesterday from manufacturer `x` have faulty hardware. I want to call the clients who bought them and revoke the purchased merchandise.
 - get me all the clients that ordered products yesterday from manufacturer `x`
@@ -56,16 +57,16 @@ Product.joins(:orders).select("products.manufacturer_id").where("orders.date >= 
 
 //FINAL
 client_ids = Order.joins(:products).select("orders.client_id").where("products.manufacturer_id = 65").where("orders.date >= ?", Date.yesterday.beginning_of_day).where("orders.date < ?", Date.today.beginning_of_day)
-Client.select("clients.first_name", "clients.last_name").where("clients.id IN (?)", client_ids)
+Client.where("clients.id IN (?)", client_ids)
 
 
 
 > I received a request from a survey company that wants to know the average age of people who bought the latest iPhone = model_num
 - get me all the average age of the clients that brought an iPhone
 
-clients_id = Order.select("orders.client_id").joins(:order_products).joins(:products).where("products.model_num = 666")
-Client.where("clients.id IN (?)", client_ids)
-years = clients.map(&:dob).map(&:year)
+client_ids = Order.select("orders.client_id").joins(:order_products).joins(:products).where("products.model_num = 666")
+clients = Client.where("clients.id IN (?)", client_ids)
+years = clients.map{ |client| client.dob.year}
 Date.today.year.to_f - (years.sum / years.size.to_f)
 
 
@@ -73,10 +74,10 @@ Date.today.year.to_f - (years.sum / years.size.to_f)
 - get me the total amount spent on products from manufacturer `x` in the last month (edited)
 
 
-quantity_price = OrderProduct.joins(:product).select("products.price", "order_products.quantity").where("products.manufacturer_id = 70")
+order_products = OrderProduct.joins(:product).joins(:order).where("products.manufacturer_id = 70").where("orders.date >= ?",  1.month.ago).where("orders.date < ?", Date.today.beginning_of_day)
 sum = 0
-quantity_price.each do |row|
-sum += row.quantity * row.price
+order_products.each do |row|
+  sum += row.quantity * row.unit_price
 end
 
 
